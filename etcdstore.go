@@ -81,7 +81,7 @@ func (s GobSerializer) Deserialize(d []byte, ss *sessions.Session) error {
 type EtcdStore struct {
 	client        *clientv3.Client
 	Codecs        []securecookie.Codec
-	Options       *sessions.Options // default configuration
+	options       *sessions.Options // default configuration
 	DefaultMaxAge int               // default Etcd TTL for a MaxAge == 0 session
 	maxLength     int
 	keyPrefix     string
@@ -123,7 +123,7 @@ func (s *EtcdStore) SetSerializer(ss SessionSerializer) {
 func (s *EtcdStore) SetMaxAge(v int) {
 	var c *securecookie.SecureCookie
 	var ok bool
-	s.Options.MaxAge = v
+	s.options.MaxAge = v
 	for i := range s.Codecs {
 		if c, ok = s.Codecs[i].(*securecookie.SecureCookie); ok {
 			c.MaxAge(v)
@@ -138,7 +138,7 @@ func NewEtcdStore(client *clientv3.Client, keyPairs ...[]byte) *EtcdStore {
 	es := &EtcdStore{
 		client: client,
 		Codecs: securecookie.CodecsFromPairs(keyPairs...),
-		Options: &sessions.Options{
+		options: &sessions.Options{
 			Path:   "/",
 			MaxAge: sessionExpire,
 		},
@@ -173,7 +173,7 @@ func (s *EtcdStore) New(r *http.Request, name string) (*sessions.Session, error)
 	)
 	session := sessions.NewSession(s, name)
 	// make a copy
-	options := *s.Options
+	options := *s.options
 	session.Options = &options
 	session.IsNew = true
 	if c, errCookie := r.Cookie(name); errCookie == nil {
@@ -228,6 +228,13 @@ func (s *EtcdStore) Delete(r *http.Request, w http.ResponseWriter, session *sess
 		delete(session.Values, k)
 	}
 	return nil
+}
+
+// Options sets configuration for a session.
+//
+// See gin-contrib/sessions https://github.com/gin-contrib/sessions/blob/master/sessions.go
+func (s *EtcdStore) Options(opts sessions.Options) {
+	s.options = &opts
 }
 
 // save stores the session in etcd.
