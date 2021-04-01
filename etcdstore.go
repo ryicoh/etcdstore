@@ -152,6 +152,24 @@ func NewEtcdStore(client *clientv3.Client, keyPairs ...[]byte) *EtcdStore {
 	return es
 }
 
+// NewEtcdStore instantiates a EtcdStore with a *clientv3.Config passed in.
+func NewEtcdGinStore(client *clientv3.Client, keyPairs ...[]byte) ginsessions.Store {
+	es := &EtcdStore{
+		client: client,
+		Codecs: securecookie.CodecsFromPairs(keyPairs...),
+		options: &sessions.Options{
+			Path:   "/",
+			MaxAge: sessionExpire,
+		},
+		DefaultMaxAge: 60 * 20, // 20 minutes seems like a reasonable default
+		maxLength:     4096,
+		keyPrefix:     "session_",
+		serializer:    GobSerializer{},
+	}
+
+	return es
+}
+
 // Close closes the underlying *etcd.Pool
 func (s *EtcdStore) Close() error {
 	return s.client.Close()
