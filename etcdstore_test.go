@@ -36,6 +36,8 @@ func setup() *clientv3.Client {
 		panic(err)
 	}
 
+	fmt.Println("cli: ", cli)
+
 	return cli
 }
 
@@ -100,7 +102,7 @@ type FlashMessage struct {
 	Message string
 }
 
-func TestRediStore(t *testing.T) {
+func TestEtcdStore(t *testing.T) {
 	var (
 		req     *http.Request
 		rsp     *ResponseRecorder
@@ -192,7 +194,7 @@ func TestRediStore(t *testing.T) {
 			t.Errorf("Expected dumped flashes; Got %v", flashes)
 		}
 
-		// RediStore specific
+		// EtcdStore specific
 		// Set MaxAge to -1 to mark for deletion.
 		session.Options.MaxAge = -1
 		// Save.
