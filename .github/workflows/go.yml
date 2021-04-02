@@ -15,6 +15,8 @@ jobs:
     services:
       etcd:
         image: bitnami/etcd:3.4.15
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
         ports:
         - 2379:2379
         options: >-
