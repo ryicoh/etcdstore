@@ -9,6 +9,9 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: [1.12, 1.13, 1.14, 1.15, 1.16]
     steps:
     - uses: actions/checkout@v2
     - run: curl -L https://github.com/etcd-io/etcd/releases/download/v3.4.15/etcd-v3.4.15-linux-amd64.tar.gz -o /tmp/etcd-3.4.15-linux-amd64.tar.gz
@@ -18,7 +21,7 @@ jobs:
  
     - uses: actions/setup-go@v2
       with:
-        go-version: 1.16
+        go-version: ${{ matrix.go }}
     - name: Build
       run: go build -v ./...
 
