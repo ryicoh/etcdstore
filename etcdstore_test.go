@@ -26,6 +26,8 @@ func setup() *clientv3.Client {
 		endpoint = defaultEtcdEndpoint
 	}
 
+	fmt.Println("endpoint: ", endpoint)
+
 	cli, err := clientv3.New(clientv3.Config{
 		Endpoints:   []string{endpoint},
 		DialTimeout: 1 * time.Second,
