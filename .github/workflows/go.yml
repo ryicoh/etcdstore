@@ -14,7 +14,7 @@ jobs:
       image:  golang:1.16
     services:
       etcd:
-        image: quay.io/coreos/etcd:v3.3.25
+        image: bitnami/etcd:3.4.15
         ports:
         - 2379:2379
         options: >-
