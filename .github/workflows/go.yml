@@ -17,8 +17,8 @@ jobs:
         - 2379:2379
         options: >-
           --health-cmd "cluster-health"
-          --health-interval 1s
-          --health-timeout 1s
+          --health-interval 5s
+          --health-timeout 5s
           --health-retries 20
     steps:
     - uses: actions/checkout@v2
