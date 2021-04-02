@@ -16,7 +16,7 @@ jobs:
         ports:
         - 2379:2379
         options: >-
-          --health-cmd "cluster-health"
+          --health-cmd "etcdctl cluster-health"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 20
